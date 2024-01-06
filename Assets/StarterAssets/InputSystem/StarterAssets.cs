@@ -37,6 +37,14 @@ namespace Assets.StarterAssets.InputSystem
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""Explode"",
+                    ""type"": ""Value"",
+                    ""id"": ""83139a1b-052e-44b7-a9f5-aca31244e8b5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
                     ""name"": ""Look"",
                     ""type"": ""Value"",
                     ""id"": ""2690c379-f54d-45be-a724-414123833eb4"",
@@ -267,6 +275,17 @@ namespace Assets.StarterAssets.InputSystem
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3b0e23ab-2bb3-4ae2-853c-cb23a56f495e"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Explode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -325,6 +344,7 @@ namespace Assets.StarterAssets.InputSystem
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
+            m_Player_Explode = m_Player.FindAction("Explode", throwIfNotFound: true);
             m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
@@ -380,6 +400,7 @@ namespace Assets.StarterAssets.InputSystem
         private IPlayerActions m_PlayerActionsCallbackInterface;
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_Fire;
+        private readonly InputAction m_Player_Explode;
         private readonly InputAction m_Player_Look;
         private readonly InputAction m_Player_Jump;
         private readonly InputAction m_Player_Sprint;
@@ -390,6 +411,7 @@ namespace Assets.StarterAssets.InputSystem
             public PlayerActions(@StarterAssets wrapper) { m_Wrapper = wrapper; }
             public InputAction @Move => m_Wrapper.m_Player_Move;
             public InputAction @Fire => m_Wrapper.m_Player_Fire;
+            public InputAction @Explode => m_Wrapper.m_Player_Explode;
             public InputAction @Look => m_Wrapper.m_Player_Look;
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
             public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
@@ -409,6 +431,9 @@ namespace Assets.StarterAssets.InputSystem
                     @Fire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
                     @Fire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
                     @Fire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                    @Explode.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnExplode;
+                    @Explode.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnExplode;
+                    @Explode.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnExplode;
                     @Look.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                     @Look.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                     @Look.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
@@ -431,6 +456,9 @@ namespace Assets.StarterAssets.InputSystem
                     @Fire.started += instance.OnFire;
                     @Fire.performed += instance.OnFire;
                     @Fire.canceled += instance.OnFire;
+                    @Explode.started += instance.OnExplode;
+                    @Explode.performed += instance.OnExplode;
+                    @Explode.canceled += instance.OnExplode;
                     @Look.started += instance.OnLook;
                     @Look.performed += instance.OnLook;
                     @Look.canceled += instance.OnLook;
@@ -487,6 +515,7 @@ namespace Assets.StarterAssets.InputSystem
         {
             void OnMove(InputAction.CallbackContext context);
             void OnFire(InputAction.CallbackContext context);
+            void OnExplode(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
             void OnSprint(InputAction.CallbackContext context);

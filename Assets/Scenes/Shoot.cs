@@ -18,9 +18,17 @@ public class Shoot : MonoBehaviour
         {
             print("Get input please one " + starterAssetsInputs.fire);
             starterAssetsInputs.fire = false;
+
             GameObject bul = (GameObject)Instantiate(projectile, point.transform.position, Quaternion.identity);
             bul.gameObject.GetComponent<Rigidbody>().velocity = Camera.main.transform.forward * speed;
-            print("Get input please two");
+            StartCoroutine(SelfDestruct(bul));
         }
+    }
+
+    //Make sure you don't yield for longer then the shoot script cleans up projectiles
+    IEnumerator SelfDestruct(GameObject bul)
+    {
+        yield return new WaitForSeconds(6f);
+        Destroy(bul);
     }
 }

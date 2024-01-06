@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 7911804310336313088}
   - component: {fileID: 5244936907440059784}
   - component: {fileID: 1985677915122837485}
-  - component: {fileID: 3107698197295554896}
+  - component: {fileID: 4655162596037527477}
   m_Layer: 6
-  m_Name: Cube
+  m_Name: Cube 1byb
   m_TagString: Box
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,7 +97,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3107698197295554896
+--- !u!114 &4655162596037527477
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,10 +106,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4074902562256470386}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c67f779e1d60b54da4b1801cc81ad83, type: 3}
+  m_Script: {fileID: 11500000, guid: d8cfb7512dfb3d945b8b7ec4fa321f7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mesh: {fileID: 4074902562256470386}
-  cubesPerXAxis: 8
-  cubesPerYAxis: 8
-  cubesPerZAxis: 8
+  cubeScaleX: 0.25
+  cubeScaleY: 0.25
+  cubeScaleZ: 0.25

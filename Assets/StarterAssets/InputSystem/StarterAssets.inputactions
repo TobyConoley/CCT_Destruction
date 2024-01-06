@@ -22,6 +22,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Explode",
+                    "type": "Value",
+                    "id": "83139a1b-052e-44b7-a9f5-aca31244e8b5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Look",
                     "type": "Value",
                     "id": "2690c379-f54d-45be-a724-414123833eb4",
@@ -252,6 +260,17 @@
                     "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "3b0e23ab-2bb3-4ae2-853c-cb23a56f495e",
+                    "path": "<Keyboard>/f",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Explode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

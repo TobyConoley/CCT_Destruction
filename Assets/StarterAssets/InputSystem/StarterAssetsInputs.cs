@@ -13,6 +13,7 @@ namespace StarterAssets
 		public bool jump;
 		public bool sprint;
 		public bool fire;
+		public bool explode;
 		public Vector2 rotate;
 
 		[Header("Movement Settings")]
@@ -51,6 +52,11 @@ namespace StarterAssets
 			OnFireInput(value.isPressed);
 		}
 
+		public void OnExplode(InputValue value)
+		{
+			OnExplodeInput(value.isPressed);
+		}
+
 		public void OnRotate(InputValue value)
 		{
 			OnRotateInput(value.Get<Vector2>());
@@ -60,7 +66,6 @@ namespace StarterAssets
 
 		public void MoveInput(Vector2 newMoveDirection)
 		{
-			print("MoveInput ");
 			move = newMoveDirection;
 		} 
 
@@ -86,6 +91,11 @@ namespace StarterAssets
 		{
 			//print("check this one " + newLeftMouseState);
 			fire = newLeftMouseState;
+		}
+
+		public void OnExplodeInput(bool newExplodeState)
+		{
+			explode = newExplodeState;
 		}
 
 		private void OnRotateInput(Vector2 newRotateDirection)
