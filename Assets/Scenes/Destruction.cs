@@ -318,7 +318,7 @@ public class Destruction : MonoBehaviour
 
 					cube.transform.position = pos;
 
-					Debug.Log("size " + size.Value["X"]);
+					//Debug.Log("size " + size.Value["X"]);
 				}
 			}
 		}

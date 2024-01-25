@@ -132,15 +132,15 @@ namespace StarterAssets
 		private void CameraRotation()
 		{
 			// if there is an input
-			if (_input.rotate.sqrMagnitude >= _threshold) //_input.look.sqrMagnitude >= _threshold
+			if (_input.look.sqrMagnitude >= _threshold) //_input.rotate.sqrMagnitude >= _threshold
 			{
 				//Don't multiply mouse input by Time.deltaTime
 				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-                //_cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
-                //_rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
-                _cinemachineTargetPitch += _input.rotate.x * RotationSpeed * deltaTimeMultiplier;
-                _rotationVelocity = _input.rotate.y * RotationSpeed * deltaTimeMultiplier;
+                _cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
+                _rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
+                //_cinemachineTargetPitch += _input.rotate.x * RotationSpeed * deltaTimeMultiplier;
+                //_rotationVelocity = _input.rotate.y * RotationSpeed * deltaTimeMultiplier;
 
                 // clamp our pitch rotation
                 _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
@@ -202,6 +202,7 @@ namespace StarterAssets
 
 		private void JumpAndGravity()
 		{
+
 			if (Grounded)
 			{
 				// reset the fall timeout timer
@@ -214,7 +215,7 @@ namespace StarterAssets
 				}
 
 				// Jump
-				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+				if (_input.jump && _jumpTimeoutDelta <= 0.0f) //_input.jump &&
 				{
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
@@ -235,10 +236,9 @@ namespace StarterAssets
 				if (_fallTimeoutDelta >= 0.0f)
 				{
 					_fallTimeoutDelta -= Time.deltaTime;
+					// if we are not grounded, do not jump
+					_input.jump = false;
 				}
-
-				// if we are not grounded, do not jump
-				_input.jump = false;
 			}
 
 			// apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)

@@ -192,7 +192,7 @@ namespace Assets.StarterAssets.InputSystem
                     ""name"": """",
                     ""id"": ""1bd55a0b-761e-4ae4-89ae-8ec127e08a29"",
                     ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
                     ""action"": ""Jump"",

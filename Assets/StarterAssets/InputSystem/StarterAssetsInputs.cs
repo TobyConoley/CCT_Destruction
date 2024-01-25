@@ -77,7 +77,6 @@ namespace StarterAssets
 
 		public void JumpInput(bool newJumpState)
 		{
-			//print("JumpInput ");
 			jump = newJumpState;
 		}
 
@@ -100,7 +99,6 @@ namespace StarterAssets
 
 		private void OnRotateInput(Vector2 newRotateDirection)
         {
-			print("rotate " + newRotateDirection);
 			rotate = newRotateDirection;
 		}
 

@@ -31,11 +31,13 @@ public class GreedyMeshXAxis : MonoBehaviour
 	public delegate Vector3Int PrintDel(Vector3Int vec); // Anonymouse function using delegate
 	public StarterAssets.StarterAssetsInputs starterAssetsInputs;
 
+
+
 	void Start()
 	{
 		// Need to round to nearest whole number?
 		cubesPerXAxis = (int)this.transform.localScale.x;
-		cubesPerYAxis = (int)this.transform.localScale.y + 1; // because it cant start at 0 it has to check voxel behind it at each step to see if can merge
+		cubesPerYAxis = (int)this.transform.localScale.y + 1; // + 1 // because it cant start at 0 it has to check voxel behind it at each step to see if can merge
 		cubesPerZAxis = (int)this.transform.localScale.z + 1; // + 1
 		sphere = GameObject.Find("Sphere");
 		sphereCollider = sphere.GetComponent<SphereCollider>();
@@ -69,8 +71,8 @@ public class GreedyMeshXAxis : MonoBehaviour
     {
 		return new Vector3Int(
 			(int)Mathf.Floor(vec.x / VOXEL_SIZE),
-			(int)Mathf.Floor(vec.x / VOXEL_SIZE),
-			(int)Mathf.Floor(vec.x / VOXEL_SIZE)
+			(int)Mathf.Floor(vec.y / VOXEL_SIZE),
+			(int)Mathf.Floor(vec.z / VOXEL_SIZE)
 		);
 	}
 
@@ -79,18 +81,20 @@ public class GreedyMeshXAxis : MonoBehaviour
 		return op(vec);
 	}
 
-	void GetClosestPointOnBox()
-    {
+	//void GetClosestPointOnBox()
+ //   {
 
-    }
+ //   }
 
 	//Assign cube data ////////////////////////////////////////////////////////////////////////////////////
+	// Createcube fires twice if the sphere colldies with the ground (fix this in future)
 	void CreateCube(string tag, GameObject targetPart)
 	{
+		print("create cube " + targetPart);
 		Vector3Int blockCount = CalculateBlockCountHelper(new Vector3Int(
 		(int)targetPart.transform.localScale.x,
 		(int)targetPart.transform.localScale.y, 
-		(int)targetPart.transform.localScale.y), 
+		(int)targetPart.transform.localScale.z), 
 		CalculateBlockCount
 		);
 
@@ -110,28 +114,48 @@ public class GreedyMeshXAxis : MonoBehaviour
 				for (int z = 0; z < cubesPerZAxis; z++)
 				{
 					Vector3Int offset = new Vector3Int(
-						(int)targetPart.transform.localScale.x + blockSize.x / 2,
-						(int)targetPart.transform.localScale.y + blockSize.y / 2,
-						(int)targetPart.transform.localScale.z + blockSize.z / 2
+						((int)targetPart.transform.localScale.x + blockSize.x) / 2, 
+						((int)targetPart.transform.localScale.y + blockSize.y) / 2, 
+						((int)targetPart.transform.localScale.z + blockSize.z) / 2// - (int)0.5
 					);
 
-					targetPart.transform.localToWorldMatrix(new Vector3.new(x, y, z));
-					//local cframe = targetPart.CFrame:ToWorldSpace(CFrame.new(Vector3.new(x,y,z) * blockSize - offset))
-
-					//function GetClosestPointOnBox(collider, boxCFrame, boxSize)
-					//	local transform = boxCFrame:PointToObjectSpace(collider.Position)
-					//	local halfSize = boxSize / 2
-					//	local position = boxCFrame * Vector3.new(
-					//		math.clamp(transform.X, -halfSize.X, halfSize.X),
-					//		math.clamp(transform.Y, -halfSize.Y, halfSize.Y),
-					//		math.clamp(transform.Y, -halfSize.Y, halfSize.Y)-- Used to be Y Y Y
-					//	)
-					//	return position
-					//end
+					Vector3 vecTest = targetPart.transform.TransformDirection(new Vector3(
+						(x * blockSize.x) - offset.x + 0.5f, 
+						(y * blockSize.y) - offset.y + 4,
+						(z * blockSize.z) - offset.z + 0.5f) 
+					);
 
 
+					print("check offset " + vecTest);
+
+					//Get the magnitude between the block and the sphere
+					var distance = (sphereCollider.transform.position - vecTest).magnitude;
 					regionPos2[new Vector3Int(x, y, z)] = new Vector3Int(1, 1, 1);
-					print("check this yo " + z);
+					if (distance > (sphereCollider.transform.localScale.y / 2))
+                    {
+						print("part is within the sphere zero  zz" + distance);
+                        
+                        //print("check this yo " + z);
+                        //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+                        //cube.GetComponent<Renderer>().material.color = Random.ColorHSV();//new Color(0, 0, 1, 1);
+
+                        //cube.transform.localScale = new Vector3(
+                        //    1,
+                        //    1,
+                        //    1
+                        //);
+
+                        //var pos = vecTest;
+
+                        //cube.tag = "Box";
+                        //cube.transform.position = pos;
+                    }
+                    else
+                    {
+						print("part is within the sphere " + distance);
+                        
+                    }
 				}
 			}
 		}
@@ -192,31 +216,49 @@ public class GreedyMeshXAxis : MonoBehaviour
 		//foreach (var data in DataItems)
 		foreach (Vector3Int key in regionPos2.Keys)
 		{
-			GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			print("cube size x " + regionPos2[new Vector3Int(key.x, key.y, key.z)].x + " /y " + regionPos2[new Vector3Int(key.x, key.y, key.z)].y + " /z " + regionPos2[new Vector3Int(key.x, key.y, key.z)].z);
-			cube.transform.localScale = new Vector3(
-				regionPos2[new Vector3Int(key.x, key.y, key.z)].x, //size.Value["X"]
-				regionPos2[new Vector3Int(key.x, key.y, key.z)].y,
-				regionPos2[new Vector3Int(key.x, key.y, key.z)].z  //added this to get right size should be easy fix though
-			);
+            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            print("cube size x " + regionPos2[new Vector3Int(key.x, key.y, key.z)].x + " /y " + regionPos2[new Vector3Int(key.x, key.y, key.z)].y + " /z " + regionPos2[new Vector3Int(key.x, key.y, key.z)].z);
+            cube.transform.localScale = new Vector3(
+                regionPos2[new Vector3Int(key.x, key.y, key.z)].x, //size.Value["X"]
+                regionPos2[new Vector3Int(key.x, key.y, key.z)].y,
+                regionPos2[new Vector3Int(key.x, key.y, key.z)].z  //added this to get right size should be easy fix though
+            );
 
-			var test = (this.transform.position - this.transform.localScale / 2) + cube.transform.localScale / 2;
+            var test = (this.transform.position - this.transform.localScale / 2) + cube.transform.localScale / 2;
 
-			var calc = new Vector3(
-					key.x - regionPos2[new Vector3Int(key.x, key.y, key.z)].x + cube.transform.localScale.x,
-					(key.y - regionPos2[new Vector3Int(key.x, key.y, key.z)].y / 2) - cube.transform.localScale.y / 2,
-					(key.z - regionPos2[new Vector3Int(key.x, key.y, key.z)].z / 2) - cube.transform.localScale.z / 2
-				//key.z - regionPos2[new Vector3Int(key.x, key.y, key.z)].z / 2) - cube.transform.localScale.z / 2
-				);
+            var calc = new Vector3(
+                    key.x - regionPos2[new Vector3Int(key.x, key.y, key.z)].x + cube.transform.localScale.x,
+                    (key.y - regionPos2[new Vector3Int(key.x, key.y, key.z)].y / 2) - cube.transform.localScale.y / 2,
+                    (key.z - regionPos2[new Vector3Int(key.x, key.y, key.z)].z / 2) - cube.transform.localScale.z / 2
+                //key.z - regionPos2[new Vector3Int(key.x, key.y, key.z)].z / 2) - cube.transform.localScale.z / 2
+                );
+
+    //        Vector3Int offset = new Vector3Int(
+				//	((int)targetPart.transform.localScale.x + blockSize.x) / 2,
+				//	((int)targetPart.transform.localScale.y + blockSize.y) / 2,
+				//	((int)targetPart.transform.localScale.z + blockSize.z) / 2// - (int)0.5
+				//);
+
+			//Vector3 vecTest = targetPart.transform.TransformDirection(new Vector3(
+			//	(key.x * blockSize.x) - offset.x + 0.5f,
+			//	(key.y * blockSize.y) - offset.y + 4,
+			//	(key.z * blockSize.z) - offset.z + 0.5f)
+			//);
+
+			//Vector3 vecTestt = new Vector3(
+			//		(vecTest.x - regionPos2[new Vector3Int(key.x, key.y, key.z)].x / 2) + blockSize.x / 2 * blockSize.x,
+			//		(vecTest.y - regionPos2[new Vector3Int(key.x, key.y, key.z)].y / 2) + blockSize.y / 2 * blockSize.y,
+			//		(vecTest.z - regionPos2[new Vector3Int(key.x, key.y, key.z)].z / 2) + blockSize.z / 2 * blockSize.z); //* blockSize;
 
 			var pos = test + calc;
+			//var pos = vecTestt;
 
 			cube.tag = "Box";
-			cube.transform.position = pos;
-		}
+            cube.transform.position = pos;
+        }
 
 		//Move block outta the freaking way
-		this.gameObject.transform.position = new Vector3(0, 0, 0);
+		this.gameObject.transform.position = new Vector3(9999, 9999, 9999);
 	}
 
 
@@ -225,8 +267,8 @@ public class GreedyMeshXAxis : MonoBehaviour
     {
 		if (starterAssetsInputs.explode)
         {
-			test(sphere.transform.position, sphereCollider.transform.localScale.y / 2);
 			starterAssetsInputs.explode = false;
+			test(sphere.transform.position, sphereCollider.transform.localScale.y / 2);
 		}
 	}
 
